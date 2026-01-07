@@ -18,6 +18,11 @@ app.use(
     },
   }),
 );
+app.use(
+  express.json({
+    type: ['application/json', 'application/vnd.api+json'],
+  }),
+);
 
 app.use(decorationsRouter);
 app.use("", notFoundHandler);

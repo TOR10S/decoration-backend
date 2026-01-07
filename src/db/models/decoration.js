@@ -5,7 +5,7 @@ const decorationsSchema = new Schema(
     typeOfDecorations: {
       type: String,
       required: true,
-      enum: ["Фотозони","Комплексний декор"]
+      enum: ["Фотозона","Комплексний декор"]
     },
     theme: {
       type: String,
@@ -16,8 +16,12 @@ const decorationsSchema = new Schema(
       required: true,
     },
     images: {
-        type:String,
+        type:Array,
         required: false,
+    },
+    review: {
+      type: String,
+      required: false,
     }
   },
   {
@@ -27,3 +31,5 @@ const decorationsSchema = new Schema(
 );
 
 export const DecorationsCollection = model('decorations', decorationsSchema);
+
+
