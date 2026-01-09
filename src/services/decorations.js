@@ -6,12 +6,32 @@ import { SORT_ORDER } from '../constants/index.js';
 export const getAllDecorations = async ({ page = 1,
   perPage = 10,
   sortOrder = SORT_ORDER.ASC,
-  sortBy = '_id', }) => {
+  sortBy = '_id',filter = {}, }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
   const decorationsQuery = DecorationsCollection.find();
-  const decorationsCount = await DecorationsCollection.find().merge(decorationsQuery).countDocuments();
-  const decorations = await decorationsQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
+  if (filter.typeOfDecorations) {
+    decorationsQuery.where('typeOfDecorations').equals(filter.typeOfDecorations);
+  }
+  if (filter.theme) {
+    decorationsQuery.where('theme').equals(filter.theme);
+  }
+if (filter.colors && Array.isArray(filter.colors) && filter.colors.length > 0) {
+    const andFilters = filter.colors.map(color => ({
+      colors: { $regex: color, $options: 'i' }
+    }));
+    decorationsQuery.and(andFilters);
+  }
+
+  const [decorationsCount, decorations] = await Promise.all([
+    DecorationsCollection.find().merge(decorationsQuery).countDocuments(),
+    decorationsQuery
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
+
   const paginationData = calculatePaginationData(decorationsCount, perPage, page);
 
   return {

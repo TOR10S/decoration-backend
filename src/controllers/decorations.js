@@ -2,12 +2,15 @@ import { createDecoration, deleteDecoration, getAllDecorations, updateDecoration
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
+import { parseFilterParams } from "../utils/parseFilterParams.js";
 
 export const getDecorationsController = async (req, res,next) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
-        const decorations = await getAllDecorations({page, perPage,sortBy,
-    sortOrder,});
+  const filter = parseFilterParams(req.query);
+
+  const decorations = await getAllDecorations({page, perPage,sortBy,
+    sortOrder,filter});
   res.status(200).json({
     message: "decorations acquired",
     data: decorations,

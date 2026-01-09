@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { getEnvVar } from './utils/getEnvVar.js';
-import decorationsRouter from "./routes/decorations.js";
+import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -24,7 +24,7 @@ app.use(
   }),
 );
 
-app.use(decorationsRouter);
+app.use(router);
 app.use("", notFoundHandler);
 app.use(errorHandler);
 
